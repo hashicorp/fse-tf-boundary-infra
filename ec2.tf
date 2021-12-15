@@ -162,7 +162,7 @@ resource "aws_instance" "controller" {
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f ~/northwind-roles.sql --quiet",
       #install vault container
       "sudo docker create --name hcvault1 --net=bnet -p ${var.vault_port}:8200 -h hcvault1 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=${var.vault_token} hashicorp/vault-enterprise:1.7.1_ent server -dev -dev-root-token-id=${var.vault_token_id}",
-      "docker start hcvault1",
+      "sudo docker start hcvault1",
       "sudo apt -y install unzip",
       "wget https://releases.hashicorp.com/boundary/0.7.1/boundary_0.7.1_linux_amd64.zip",
       "unzip boundary_0.7.1_linux_amd64.zip -d ~/boundary",

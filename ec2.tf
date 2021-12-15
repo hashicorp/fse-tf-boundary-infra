@@ -158,8 +158,8 @@ resource "aws_instance" "controller" {
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database boundary';",
       #populate northwinds database
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database northwind';",
-      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f ~/northwind-database.sql --quiet",
-      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f ~/northwind-roles.sql --quiet",
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/northwind\" -f ~/northwind-database.sql --quiet",
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/northwind\" -f ~/northwind-roles.sql --quiet",
       #install vault container
       "sudo docker create --name hcvault1 --net=bnet -p ${var.vault_port}:8200 -h hcvault1 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=${var.vault_token} hashicorp/vault-enterprise:1.7.1_ent server -dev -dev-root-token-id=${var.vault_token_id}",
       "sudo docker start hcvault1",

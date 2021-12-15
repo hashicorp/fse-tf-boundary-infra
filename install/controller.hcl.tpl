@@ -10,7 +10,7 @@ controller {
   description = "A controller for a demo!"
 
   database {
-    url = ${db_endpoint}
+    url = "${db_endpoint}"
   }
 }
 

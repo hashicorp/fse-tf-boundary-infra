@@ -170,14 +170,12 @@ resource "aws_instance" "controller" {
       "sudo chmod 0755 /usr/local/bin/boundary",
       "sudo mv ~/boundary-controller.hcl /etc/boundary-controller.hcl",
       "sudo chmod 0755 ~/install.sh",
-      "sudo ~/./install.sh controller"
-      #<<EOT
-      #cat > envars.sh <<EOF
-      #export VAULT_ADDR=http://localhost:${var.vault_port}
-      #export VAULT_TOKEN_ID=${var.vault_token_id}
-      #export VAULT_TOKEN_=${var.vault_token}
-      #OEF
-      #EOT
+      "sudo ~/./install.sh controller",
+      "touch login.sh",
+      "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
+      "sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
+      "sudo apt-get update && sudo apt-get install vault",
+      "echo \"export VAULT_ADDR=http://localhost:${var.vault_port}\"; echo \"export VAULT_TOKEN_=${var.vault_token}\" > login.sh"
     ]
   }
 }

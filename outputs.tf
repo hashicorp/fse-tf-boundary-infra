@@ -15,6 +15,10 @@ output "controller_public_ip" {
   value = aws_instance.controller[*].public_ip
 }
 
+output "vault_public_ip" {
+  value = aws_instance.vault.public_ip
+}
+
 output "kms_recovery_key_id" {
   value = aws_kms_key.recovery.id
 }

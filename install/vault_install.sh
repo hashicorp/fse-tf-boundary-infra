@@ -4,7 +4,7 @@ export VAULT_ADDR=http://localhost:8201
 
 set -e
 
-sudo docker network create --driver bridge vault &> /dev/null
+sudo docker network create --driver bridge vault
 
 port=8201
 echo "starting vault port address mapping is ::8200 >> $port

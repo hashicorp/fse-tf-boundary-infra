@@ -136,12 +136,21 @@ resource "aws_instance" "controller" {
        "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
       "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
       "sudo apt-get -y update",
+      #setup docker
       "sudo apt-get -y install docker-ce docker-ce-cli containerd.io",
       "sudo docker network create bnet",
-      "sudo docker create --name boundary_psql --network bnet -it -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres postgres",
+      #setup psql container
+      "sudo docker create --name boundary_psql --network bnet -it -p 5432:5432 -e POSTGRES_PASSWORD=${var.psql_pw} -e POSTGRES_USER=${var.psql_user} postgres",
       "sudo docker start boundary_psql",
       "sleep 5",
-      "psql \"postgresql://postgres:postgres@localhost/postgres\" -c 'create database boundary';",
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database boundary';",
+      #populate northwinds database
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database northwind",
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f northwind-database.sql --quiet",
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f northwind-roles.sql --quiet",
+      #install vault container
+      "sudo docker create --name hcvault1 --net=bnet -p ${var.vault_port}:8200 -h hcvault1 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=${var.vault_token} hashicorp/vault-enterprise:1.7.1_ent server -dev -dev-root-token-id=${var.vault_token_id}",
+      "docker start hcvault1",
       "sudo apt -y install unzip",
       "wget https://releases.hashicorp.com/boundary/0.7.1/boundary_0.7.1_linux_amd64.zip",
       "unzip boundary_0.7.1_linux_amd64.zip -d ~/boundary",

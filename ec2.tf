@@ -79,6 +79,51 @@ resource "aws_instance" "worker" {
 }
 
 
+resource "aws_instance" "vault" {
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  iam_instance_profile        = aws_iam_instance_profile.boundary.name
+  subnet_id                   = aws_subnet.public[0]
+  key_name                    = aws_key_pair.boundary.key_name
+  vpc_security_group_ids      = [aws_security_group.controller.id]
+  associate_public_ip_address = true
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.boundary.private_key_pem
+    host        = self.public_ip
+  }
+  provisioner "file" {
+    on_failure = continue
+    source      = "${path.module}/install/vault_install.sh"
+    destination = "~/vault_install.sh"
+  }
+
+  provisioner "file" {
+    on_failure = continue
+    source      = "${path.module}/install/config.hcl"
+    destination = "~/config.hcl"
+  }
+
+  provisioner "remote-exec" {
+    on_failure = continue
+    inline = [
+      "sudo mkdir -p /etc/pki/tls/boundary",
+      "echo '${tls_private_key.boundary.private_key_pem}' | sudo tee ${var.tls_key_path}",
+      "echo '${tls_self_signed_cert.boundary.cert_pem}' | sudo tee ${var.tls_cert_path}",
+    ]
+  }
+  provisioner "remote-exec" {
+    on_failure = continue
+    inline = [
+      "mkdir ~/vault",
+      "mv ~/config.hcl ~/vault/config.hcl",
+      "sudo sh ~/vault_install.sh"
+    ]
+  }
+
+}
 resource "aws_instance" "controller" {
   count                       = var.num_controllers
   ami                         = data.aws_ami.ubuntu.id

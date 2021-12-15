@@ -7,11 +7,11 @@ Changelog:
 - Removed indiviudal resource tagging in favor of provider level default tags
 - Migrate away from RDS for provisioning/deprovisioning speed + cost savings
 - Migrate away from load balencer for cost savings (single controller architecture)
+- Add Vault container to the controller EC2 instance - 12.15.21
+- Northwinds psql database and roles for boundary demo - 12.15.21
 
 Todo:
 ===
-- Add Vault container
-- Northwinds psql Configuration
 - Add Worker into Azure
 
 Stretch Goals:

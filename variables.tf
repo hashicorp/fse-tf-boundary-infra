@@ -6,11 +6,6 @@ locals {
   priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)
 }
 
-variable "vault_token_id" {
-  type = string
-  default = "root"
-}
-
 variable "vault_token" {
   type = string
 }

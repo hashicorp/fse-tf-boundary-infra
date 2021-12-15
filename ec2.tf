@@ -119,6 +119,8 @@ resource "aws_instance" "vault" {
     inline = [
       "mkdir ~/vault",
       "mv ~/config.hcl ~/vault/config.hcl",
+      #setup docker
+      "sudo apt-get -y install docker-ce docker-ce-cli containerd.io",
       "sudo sh ~/vault_install.sh"
     ]
   }

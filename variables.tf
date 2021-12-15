@@ -8,6 +8,7 @@ locals {
 
 variable "vault_token_id" {
   type = string
+  default = "root"
 }
 
 variable "vault_token" {

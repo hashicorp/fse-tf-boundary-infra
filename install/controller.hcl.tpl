@@ -10,7 +10,7 @@ controller {
   description = "A controller for a demo!"
 
   database {
-    url = "postgresql://postgres:postgres@localhost/boundary?sslmode=disable"
+    url = ${db_endpoint}
   }
 }
 

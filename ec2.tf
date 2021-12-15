@@ -118,7 +118,7 @@ resource "aws_instance" "controller" {
     on_failure = continue
     content = templatefile("${path.module}/install/controller.hcl.tpl", {
       name_suffix            = count.index
-      db_endpoint            = "endpoint_variable"
+      db_endpoint            = "postgresql://${var.psql_user}:${var.psql_pw}@localhost/boundary?sslmode=disable"
       private_ip             = self.private_ip
       tls_disabled           = var.tls_disabled
       tls_key_path           = var.tls_key_path
@@ -145,7 +145,7 @@ resource "aws_instance" "controller" {
       "sudo apt -y update",
       "sudo apt -y install postgresql-client",
       "sudo apt-get install ca-certificates curl gnupg lsb-release",
-       "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
       "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
       "sudo apt-get -y update",
       #setup docker
@@ -171,6 +171,13 @@ resource "aws_instance" "controller" {
       "sudo mv ~/boundary-controller.hcl /etc/boundary-controller.hcl",
       "sudo chmod 0755 ~/install.sh",
       "sudo ~/./install.sh controller"
+      #<<EOT
+      #cat > envars.sh <<EOF
+      #export VAULT_ADDR=http://localhost:${var.vault_port}
+      #export VAULT_TOKEN_ID=${var.vault_token_id}
+      #export VAULT_TOKEN_=${var.vault_token}
+      #OEF
+      #EOT
     ]
   }
 }

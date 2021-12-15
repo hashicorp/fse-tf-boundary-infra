@@ -157,7 +157,7 @@ resource "aws_instance" "controller" {
       "sleep 5",
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database boundary';",
       #populate northwinds database
-      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database northwind",
+      "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database northwind';",
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f ~/northwind-database.sql --quiet",
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres/northwind\" -f ~/northwind-roles.sql --quiet",
       #install vault container

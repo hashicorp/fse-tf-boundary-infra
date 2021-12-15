@@ -1,8 +1,10 @@
+set -e
+
+
 VAULT_IMAGE="hashicorp/vault"
 declare VAULT_CONTAINERS=("vault-0" "vault-1" "vault-2")
 export VAULT_ADDR=http://localhost:8201
-
-set -e
+export DIR=~
 
 sudo docker network create --driver bridge vault
 
@@ -25,7 +27,7 @@ do
       -e VAULT_CLUSTER_ADDR="http://${container?}:8201" \
       -e VAULT_API_ADDR="http://${container?}:8200" \
       -e VAULT_RAFT_NODE_ID="${container?}" \
-      -v ~/vault:/vault/config \
+      -v $DIR/vault:/vault/config \
       -v ${container?}:/vault/file:z \
       --privileged \
       --detach \

@@ -18,7 +18,7 @@ do
     "
     echo "${container?} vault mapped port is localhost:$port
     "
-    sudo docker run \
+    docker run \
       --name=${container?} \
       --hostname=${container?} \
       --network=vault \

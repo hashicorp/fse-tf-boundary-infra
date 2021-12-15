@@ -6,7 +6,15 @@ locals {
   priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)
 }
 
-variable "pqsl_pw" {
+variable "vault_token_id" {
+  type = string
+}
+
+variable "vault_token" {
+  type = string
+}
+
+variable "psql_pw" {
   type = string
   description = "password to the psql database"
 }

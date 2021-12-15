@@ -1,14 +1,10 @@
-#!/bin/bash
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-VAULT_IMAGE='hashicorp/vault'
-export VAULT_CONTAINERS=('vault-0' 'vault-1' 'vault-2')
+VAULT_IMAGE="hashicorp/vault"
+declare VAULT_CONTAINERS=("vault-0" "vault-1" "vault-2")
 export VAULT_ADDR=http://localhost:8201
 
 set -e
 
-docker network create --driver bridge vault &> /dev/null
+sudo docker network create --driver bridge vault &> /dev/null
 
 port=8201
 echo "starting vault port address mapping is ::8200 >> $port
@@ -20,7 +16,7 @@ do
     "
     echo "${container?} vault mapped port is localhost:$port
     "
-    docker run \
+    sudo docker run \
       --name=${container?} \
       --hostname=${container?} \
       --network=vault \
@@ -29,11 +25,11 @@ do
       -e VAULT_CLUSTER_ADDR="http://${container?}:8201" \
       -e VAULT_API_ADDR="http://${container?}:8200" \
       -e VAULT_RAFT_NODE_ID="${container?}" \
-      -v ${DIR?}:/vault/config \
+      -v ~/vault:/vault/config \
       -v ${container?}:/vault/file:z \
       --privileged \
       --detach \
-      ${VAULT_IMAGE?} vault server -config=/vault/config/config.hcl &> /dev/null 
+      ${VAULT_IMAGE?} vault server -config=/vault/config/config.hcl
 
      port=$((port+1))
 done

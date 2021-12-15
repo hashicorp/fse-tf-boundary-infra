@@ -5,9 +5,9 @@ terraform {
     }
   }
     backend "remote" {
-    organization = "argocorp"
-    workspaces {
-      name = "boundary-demo-infra"
+      organization = "PublicSector-ATARC"
+      workspaces {
+        name = "fse-tf-atarc-boundary-infra"
+      }
     }
   }
-}

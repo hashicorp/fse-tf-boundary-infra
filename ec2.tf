@@ -136,7 +136,7 @@ resource "aws_instance" "vault" {
       "sudo apt-get upgrade -y coreutils",
       "git clone https://github.com/hashicorp-community/tf-helper.git",
       "cd tf-helper/tfh/bin",
-      "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh",
+      "sudo ln -s $PWD/tfh /usr/local/bin/tfh",
     ]
   }
 

@@ -13,3 +13,8 @@ sudo docker network rm vault
 sudo docker logs vault-1
 
  sudo docker ps -a
+
+
+
+docker exec -ti vault-1 vault operator raft join http://vault-0:8200
+docker exec -ti vault-1  vault operator unseal $unseal

@@ -53,7 +53,7 @@ unseal=$(echo ${initRaw?} | jq -r '.unseal_keys_b64[0]')
 rootToken=$(echo ${initRaw?} | jq -r '.root_token')
 
 echo "unsealing ${VAULT_CONTAINERS[0]?}..."
-docker exec -ti ${VAULT_CONTAINERS[0]?} vault operator unseal ${unseal?} &> /dev/null
+docker exec -ti ${VAULT_CONTAINERS[0]?} vault operator unseal ${unseal}
 
 echo 'Waiting cluster initialization and unseal operation...
 '
@@ -72,7 +72,7 @@ do
     echo "unsealing ${container?}
     "
     sleep 2
-    docker exec -ti ${container?} vault operator unseal ${unseal?} &> /dev/null
+    docker exec -ti ${container?} vault operator unseal $unseal &> /dev/null
 
 done
 
@@ -84,7 +84,7 @@ echo "Unseal Key: ${unseal?}
 
 echo "Attempting login...
 "
-vault login ${rootToken?}
+vault login $rootToken
 
 echo "Displaying Raft Peers...
 "

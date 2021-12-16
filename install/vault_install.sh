@@ -76,12 +76,6 @@ do
 
 done
 
-echo "Vault Raft Cluster is initialized, unsealed and Raft cluster is ready!"
-echo "In case you need them: "
-echo "Root Token: ${rootToken?}"
-echo "Unseal Key: ${unseal?}
-"
-
 echo "Attempting login...
 "
 vault login $rootToken
@@ -89,3 +83,8 @@ vault login $rootToken
 echo "Displaying Raft Peers...
 "
 vault operator raft list-peers
+
+sudo cat << EOF > /home/ubuntu/vault/init
+rootToken: $rootToken
+unsealKey: $unseal
+EOF

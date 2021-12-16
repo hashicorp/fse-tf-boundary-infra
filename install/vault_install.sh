@@ -1,16 +1,18 @@
 set -e
-
+sudo chmod 666 /var/run/docker.sock
 
 VAULT_IMAGE="hashicorp/vault"
 declare VAULT_CONTAINERS=("vault-0" "vault-1" "vault-2")
 export VAULT_ADDR=http://localhost:8201
 export DIR=~
 
-sudo docker network create --driver bridge vault
+docker network create --driver bridge vault
 
 port=8201
 echo "starting vault port address mapping is ::8200 >> $port
 "
+
+   # -v $DIR/vault:/vault/config \
 
 for container in ${VAULT_CONTAINERS[@]}
 do
@@ -18,23 +20,36 @@ do
     "
     echo "${container?} vault mapped port is localhost:$port
     "
-    sudo docker run \
-      --name=${container?} \
-      --hostname=${container?} \
-      --network=vault \
-      -p ${port?}:8200 \
-      -e VAULT_ADDR="http://localhost:8200" \
-      -e VAULT_CLUSTER_ADDR="http://${container?}:8201" \
-      -e VAULT_API_ADDR="http://${container?}:8200" \
-      -e VAULT_RAFT_NODE_ID="${container?}" \
-      -v $DIR/vault:/vault/config \
-      -v ${container?}:/vault/file:z \
-      --privileged \
-      --detach \
-      ${VAULT_IMAGE?} vault server -config=/vault/config/config.hcl
+    sudo docker create \
+        --name=${container?} \
+        --hostname=${container?} \
+        --network=vault \
+        -p ${port?}:8200 \
+        -e VAULT_ADDR="http://localhost:8200" \
+        -e VAULT_CLUSTER_ADDR="http://${container?}:8201" \
+        -e VAULT_API_ADDR="http://${container?}:8200" \
+        -e VAULT_RAFT_NODE_ID="${container?}" \
+        -v ${container?}:/vault/file:z \
+        --privileged \
+        ${VAULT_IMAGE?} vault server -config=/vault/config.hcl
 
-     port=$((port+1))
+    docker cp /home/ubuntu/vault/config.hcl ${container?}:/vault
+
+    port=$((port+1))
 done
+
+echo 'starting docker containers'
+for container in ${VAULT_CONTAINERS[@]}
+do
+    echo "Starting ${container?}"
+    sudo docker start ${container?}
+done
+
+sleep 5
+
+sudo docker logs vault-0
+sudo docker logs vault-1
+sudo docker logs vault-2
 
 echo 'initilizing cluster + exporting seal keys and tokens...
 '

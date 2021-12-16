@@ -117,6 +117,7 @@ resource "aws_instance" "vault" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
+      "sudo apt-get update",
       "sudo apt install -y jq",
       "mkdir ~/vault",
       "mv ~/config.hcl ~/vault/config.hcl",
@@ -218,8 +219,8 @@ resource "aws_instance" "controller" {
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/northwind\" -f ~/northwind-database.sql --quiet",
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/northwind\" -f ~/northwind-roles.sql --quiet",
       #install vault container
-      "sudo docker create --name hcvault1 --net=bnet -p ${var.vault_port}:8200 -h hcvault1 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=${var.vault_token} hashicorp/vault-enterprise:1.7.1_ent server -dev -dev-root-token-id=${var.vault_token}",
-      "sudo docker start hcvault1",
+      #"sudo docker create --name hcvault1 --net=bnet -p ${var.vault_port}:8200 -h hcvault1 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=${var.vault_token} hashicorp/vault-enterprise:1.7.1_ent server -dev -dev-root-token-id=${var.vault_token}",
+      #"sudo docker start hcvault1",
       "sudo apt -y install unzip",
       "wget https://releases.hashicorp.com/boundary/0.7.1/boundary_0.7.1_linux_amd64.zip",
       "unzip boundary_0.7.1_linux_amd64.zip -d ~/boundary",
@@ -228,12 +229,12 @@ resource "aws_instance" "controller" {
       "sudo mv ~/boundary-controller.hcl /etc/boundary-controller.hcl",
       "sudo chmod 0755 ~/install.sh",
       "sudo ~/./install.sh controller",
-      "touch login.sh",
-      "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
-      "sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
-      "sudo apt-get update && sudo apt-get install vault",
-      "echo \"export VAULT_ADDR=http://localhost:${var.vault_port}\" > login.sh",
-      "echo \"export VAULT_TOKEN=${var.vault_token}\" >> login.sh"
+      #"touch login.sh",
+      #"curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
+      #"sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
+      #"sudo apt-get update && sudo apt-get install vault",
+      #"echo \"export VAULT_ADDR=http://localhost:${var.vault_port}\" > login.sh",
+      #"echo \"export VAULT_TOKEN=${var.vault_token}\" >> login.sh"
     ]
   }
 }

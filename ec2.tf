@@ -139,8 +139,8 @@ resource "aws_instance" "vault" {
       "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh ",
       "vault_token=$(grep 's' /home/ubuntu/vault/token)",
       "unseal=$(grep 's' /home/ubuntu/vault/unseal)",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=$vault_root' -overwrite vault_token -token $token",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_unseal=$unseal' -overwrite vault_token -token $token"
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=$vault_root' -overwrite vault_token -token ${var.tfc_token}",
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_unseal=$unseal' -overwrite vault_token -token ${var.tfc_token}"
     ]
   }
 

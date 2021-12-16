@@ -147,7 +147,7 @@ resource "aws_instance" "vault" {
       "rootToken=$(cat init.json | jq -r '.root_token')",
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=$vault_root' -overwrite vault_token -token ${var.tfc_token}",
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_unseal=$unseal' -overwrite vault_token -token ${var.tfc_token}",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_public_ip=${aws_instance.vault.public_ip}' -overwrite vault_public_ip -token ${var.tfc_token}"
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_public_ip=${aws_instance.vault.public_ip}' -overwrite vault_public_ip -token ${var.tfc_token}"
     ]
   }
 

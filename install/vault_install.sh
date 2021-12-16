@@ -48,9 +48,9 @@ echo 'initilizing cluster + exporting seal keys and tokens...
 '
 # -n = number of key shares. 
 # -t threshold for unseal.
-initRaw=$(docker exec -ti ${VAULT_CONTAINERS[0]?} vault operator init -format=json -n 1 -t 1)
-unseal=$(echo ${initRaw?} | jq -r '.unseal_keys_b64[0]')
-rootToken=$(echo ${initRaw?} | jq -r '.root_token')
+docker exec -ti ${VAULT_CONTAINERS[0]?} vault operator init -format=json -n 1 -t 1 > init.json
+unseal=$(cat init.json | jq -r '.unseal_keys_b64[0]')
+rootToken=$(cat init.json | jq -r '.root_token')
 
 echo "unsealing ${VAULT_CONTAINERS[0]?}..."
 docker exec -ti ${VAULT_CONTAINERS[0]?} vault operator unseal ${unseal}

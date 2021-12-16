@@ -136,15 +136,15 @@ resource "aws_instance" "vault" {
       "sudo apt-get upgrade -y coreutils",
       "git clone https://github.com/hashicorp-community/tf-helper.git",
       "cd tf-helper/tfh/bin",
-      "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh ",
+      "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh",
     ]
   }
 
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
-      "vault_token=$(grep 's' /home/ubuntu/vault/token)",
-      "unseal=$(grep 's' /home/ubuntu/vault/unseal)",
+      "unseal=$(cat init.json | jq -r '.unseal_keys_b64[0]')",
+      "rootToken=$(cat init.json | jq -r '.root_token')",
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=$vault_root' -overwrite vault_token -token ${var.tfc_token}",
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_unseal=$unseal' -overwrite vault_token -token ${var.tfc_token}"
     ]

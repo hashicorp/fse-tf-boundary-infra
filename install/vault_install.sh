@@ -11,9 +11,6 @@ docker network create --driver bridge vault
 port=8201
 echo "starting vault port address mapping is ::8200 >> $port
 "
-
-   # -v $DIR/vault:/vault/config \
-
 for container in ${VAULT_CONTAINERS[@]}
 do
     echo "Creating ${container?}...
@@ -46,10 +43,6 @@ do
 done
 
 sleep 5
-
-sudo docker logs vault-0
-sudo docker logs vault-1
-sudo docker logs vault-2
 
 echo 'initilizing cluster + exporting seal keys and tokens...
 '

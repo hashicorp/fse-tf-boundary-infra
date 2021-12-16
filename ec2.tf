@@ -133,7 +133,7 @@ resource "aws_instance" "vault" {
       #stand up cluster
       "sudo apt-get install -y jq curl",
       "sudo bash vault_install.sh",
-      "sudo apt-get upgrade coreutils",
+      "sudo apt-get upgrade -y coreutils",
       "git clone https://github.com/hashicorp-community/tf-helper.git",
       "cd tf-helper/tfh/bin",
       "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh ",

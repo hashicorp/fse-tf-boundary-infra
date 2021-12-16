@@ -2,9 +2,9 @@
 #  value = aws_lb.controller.dns_name
 #}
 
-output "target_ips" {
-  value = aws_instance.target.*.private_ip
-}
+#output "target_ips" {
+#  value = aws_instance.target.*.private_ip
+#}
 
 output "keypair_pem" {
   value = tls_private_key.boundary.private_key_pem

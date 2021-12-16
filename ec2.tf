@@ -137,12 +137,19 @@ resource "aws_instance" "vault" {
       "git clone https://github.com/hashicorp-community/tf-helper.git",
       "cd tf-helper/tfh/bin",
       "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh ",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    on_failure = continue
+    inline = [
       "vault_token=$(grep 's' /home/ubuntu/vault/token)",
       "unseal=$(grep 's' /home/ubuntu/vault/unseal)",
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=$vault_root' -overwrite vault_token -token ${var.tfc_token}",
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_unseal=$unseal' -overwrite vault_token -token ${var.tfc_token}"
     ]
   }
+
 
 }
 resource "aws_instance" "controller" {
@@ -226,9 +233,7 @@ resource "aws_instance" "controller" {
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/postgres\" -c 'create database northwind';",
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/northwind\" -f ~/northwind-database.sql --quiet",
       "psql \"postgresql://${var.psql_user}:${var.psql_pw}@localhost/northwind\" -f ~/northwind-roles.sql --quiet",
-      #install vault container
-      #"sudo docker create --name hcvault1 --net=bnet -p ${var.vault_port}:8200 -h hcvault1 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_TOKEN=${var.vault_token} hashicorp/vault-enterprise:1.7.1_ent server -dev -dev-root-token-id=${var.vault_token}",
-      #"sudo docker start hcvault1",
+      #install boundary
       "sudo apt -y install unzip",
       "wget https://releases.hashicorp.com/boundary/0.7.1/boundary_0.7.1_linux_amd64.zip",
       "unzip boundary_0.7.1_linux_amd64.zip -d ~/boundary",
@@ -237,22 +242,16 @@ resource "aws_instance" "controller" {
       "sudo mv ~/boundary-controller.hcl /etc/boundary-controller.hcl",
       "sudo chmod 0755 ~/install.sh",
       "sudo ~/./install.sh controller",
-      #"touch login.sh",
-      #"curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
-      #"sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
-      #"sudo apt-get update && sudo apt-get install vault",
-      #"echo \"export VAULT_ADDR=http://localhost:${var.vault_port}\" > login.sh",
-      #"echo \"export VAULT_TOKEN=${var.vault_token}\" >> login.sh"
     ]
   }
 }
 
 # Example resource for connecting to through boundary over SSH
-resource "aws_instance" "target" {
-  count                  = var.num_targets
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.micro"
-  subnet_id              = aws_subnet.private.*.id[count.index]
-  key_name               = aws_key_pair.boundary.key_name
-  vpc_security_group_ids = [aws_security_group.worker.id]
-}
+#resource "aws_instance" "target" {
+#  count                  = var.num_targets
+#  ami                    = data.aws_ami.ubuntu.id
+#  instance_type          = "t3.micro"
+#  subnet_id              = aws_subnet.private.*.id[count.index]
+#  key_name               = aws_key_pair.boundary.key_name
+#  vpc_security_group_ids = [aws_security_group.worker.id]
+#}

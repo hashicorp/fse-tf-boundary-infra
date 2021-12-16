@@ -18,3 +18,8 @@ sudo docker logs vault-1
 
 docker exec -ti vault-1 vault operator raft join http://vault-0:8200
 docker exec -ti vault-1  vault operator unseal $unseal
+
+tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'public_vault_ip=' -overwrite public_vault_ip
+tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'private_vault_ip=' -overwrite private_vault_ip
+tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=' -overwrite vault_token
+

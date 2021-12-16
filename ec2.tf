@@ -131,8 +131,16 @@ resource "aws_instance" "vault" {
       "sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
       "sudo apt-get update && sudo apt-get install vault",
       #stand up cluster
-      "sudo apt-get install -y jq",
-      "sudo bash vault_install.sh"
+      "sudo apt-get install -y jq curl",
+      "sudo bash vault_install.sh",
+      "sudo apt-get upgrade coreutils",
+      "git clone https://github.com/hashicorp-community/tf-helper.git",
+      "cd tf-helper/tfh/bin",
+      "sudo ln -s /home/ubuntu/tf-helper/tfh/ /usr/local/bin/tfh ",
+      "vault_token=$(grep 's' /home/ubuntu/vault/token)",
+      "unseal=$(grep 's' /home/ubuntu/vault/unseal)",
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_token=$vault_root' -overwrite vault_token -token $token",
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar 'vault_unseal=$unseal' -overwrite vault_token -token $token"
     ]
   }
 

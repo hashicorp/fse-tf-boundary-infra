@@ -84,7 +84,5 @@ echo "Displaying Raft Peers...
 "
 vault operator raft list-peers
 
-sudo cat << EOF > /home/ubuntu/vault/init
-rootToken: $rootToken
-unsealKey: $unseal
-EOF
+sudo echo $rootToken | sudo tee /home/ubuntu/vault/token &> /dev/null
+sudo echo $unseal | sudo tee /home/ubuntu/vault/unseal &> /dev/null

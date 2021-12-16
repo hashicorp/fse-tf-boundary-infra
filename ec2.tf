@@ -118,7 +118,6 @@ resource "aws_instance" "vault" {
     on_failure = continue
     inline = [
       "sudo apt update",
-      "sudo apt install -y jq",
       "mkdir ~/vault",
       "mv ~/config.hcl ~/vault/config.hcl",
       #setup docker
@@ -132,6 +131,7 @@ resource "aws_instance" "vault" {
       "sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
       "sudo apt-get update && sudo apt-get install vault",
       #stand up cluster
+      "sudo apt-get install -y jq",
       "sudo bash vault_install.sh"
     ]
   }

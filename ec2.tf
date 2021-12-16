@@ -117,7 +117,7 @@ resource "aws_instance" "vault" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
-      "sudo apt-get update",
+      "sudo apt update",
       "sudo apt install -y jq",
       "mkdir ~/vault",
       "mv ~/config.hcl ~/vault/config.hcl",

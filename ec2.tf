@@ -109,7 +109,7 @@ resource "aws_instance" "vault" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
-      "sudo mkdir -p /etc/pki/tls/vault",
+      "sudo mkdir -p /etc/pki/tls/boundary",
       "echo '${tls_private_key.boundary.private_key_pem}' | sudo tee ${var.tls_key_path}",
       "echo '${tls_self_signed_cert.boundary.cert_pem}' | sudo tee ${var.tls_cert_path}",
     ]
@@ -117,7 +117,7 @@ resource "aws_instance" "vault" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
-      "sudo apt-get install -y jq",
+      "sudo apt install -y jq",
       "mkdir ~/vault",
       "mv ~/config.hcl ~/vault/config.hcl",
       #setup docker

@@ -7,7 +7,7 @@
 #}
 
 output "keypair_pem" {
-  value = tls_private_key.boundary.private_key_pem
+  value     = tls_private_key.boundary.private_key_pem
   sensitive = true
 }
 

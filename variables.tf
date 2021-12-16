@@ -11,17 +11,17 @@ variable "vault_token" {
 }
 
 variable "psql_pw" {
-  type = string
+  type        = string
   description = "password to the psql database"
 }
 
 variable "psql_user" {
-  type = string
+  type        = string
   description = "psql database username"
 }
 
 variable "vault_port" {
-  type = string
+  type        = string
   description = "external port to hit vault"
 }
 

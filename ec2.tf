@@ -54,7 +54,7 @@ resource "aws_instance" "worker" {
   }
 
   provisioner "file" {
-    on_failure = continue
+    on_failure  = continue
     source      = "${path.module}/install/install.sh"
     destination = "~/install.sh"
   }
@@ -95,13 +95,13 @@ resource "aws_instance" "vault" {
     host        = self.public_ip
   }
   provisioner "file" {
-    on_failure = continue
+    on_failure  = continue
     source      = "${path.module}/install/vault_install.sh"
     destination = "~/vault_install.sh"
   }
 
   provisioner "file" {
-    on_failure = continue
+    on_failure  = continue
     source      = "${path.module}/install/config.hcl"
     destination = "~/config.hcl"
   }
@@ -133,6 +133,7 @@ resource "aws_instance" "vault" {
       #stand up cluster
       "sudo apt-get install -y jq curl",
       "sudo bash vault_install.sh",
+      #install Terraform helper
       "sudo apt-get upgrade -y coreutils",
       "git clone https://github.com/hashicorp-community/tf-helper.git",
       "cd tf-helper/tfh/bin",
@@ -170,24 +171,24 @@ resource "aws_instance" "controller" {
     host        = self.public_ip
   }
   provisioner "file" {
-    on_failure = continue
+    on_failure  = continue
     source      = "${path.module}/install/install.sh"
     destination = "~/install.sh"
   }
 
-    provisioner "file" {
-    on_failure = continue
+  provisioner "file" {
+    on_failure  = continue
     source      = "${path.module}/install/northwind-database.sql"
     destination = "~/northwind-database.sql"
   }
 
-    provisioner "file" {
-    on_failure = continue
+  provisioner "file" {
+    on_failure  = continue
     source      = "${path.module}/install/northwind-roles.sql"
     destination = "~/northwind-roles.sql"
   }
 
-# aws_db_instance.boundary.endpoint
+  # aws_db_instance.boundary.endpoint
   provisioner "file" {
     on_failure = continue
     content = templatefile("${path.module}/install/controller.hcl.tpl", {
@@ -204,8 +205,8 @@ resource "aws_instance" "controller" {
     })
     destination = "~/boundary-controller.hcl"
   }
-  
-    provisioner "remote-exec" {
+
+  provisioner "remote-exec" {
     on_failure = continue
     inline = [
       "sudo mkdir -p /etc/pki/tls/boundary",
@@ -213,7 +214,7 @@ resource "aws_instance" "controller" {
       "echo '${tls_self_signed_cert.boundary.cert_pem}' | sudo tee ${var.tls_cert_path}",
     ]
   }
-    provisioner "remote-exec" {
+  provisioner "remote-exec" {
     on_failure = continue
     inline = [
       "sudo apt -y update",

@@ -27,4 +27,5 @@ Todo:
 
 Stretch Goals:
 ===
+- OIDC with vault or auth0
 - Add an Azure dynamic Host Set: https://learn.hashicorp.com/tutorials/boundary/cloud-host-catalogs

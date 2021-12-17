@@ -150,7 +150,7 @@ resource "aws_instance" "vault" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
-      "sudo bash pushvars.sh ${var.tfc_token}"
+      "sudo bash pushvars.sh ${var.tfc_token} ${var.psql_user} ${var.psql_pw}"
     ]
   }
   

@@ -106,6 +106,12 @@ resource "aws_instance" "vault" {
     destination = "~/config.hcl"
   }
 
+    provisioner "file" {
+    on_failure  = continue
+    source      = "${path.module}/install/pushvars.sh"
+    destination = "~/pushvars.sh"
+  }
+
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
@@ -144,10 +150,11 @@ resource "aws_instance" "vault" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
+      "sudo bash pushvars.sh ${tfc_token}"
       #"unseal=$(cat init.json | jq -r '.unseal_keys_b64[0]')",
       #"rootToken=$(cat init.json | jq -r '.root_token')",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_token=(cat init.json | jq -r '.unseal_keys_b64[0]')' -overwrite vault_token -token ${var.tfc_token}",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_unseal=(cat init.json | jq -r '.root_token')' -overwrite vault_unseal -token'${var.tfc_token}",
+      #"tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_token=(cat init.json | jq -r '.unseal_keys_b64[0]')' -overwrite vault_token -token ${var.tfc_token}",
+      #"tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_unseal=(cat init.json | jq -r '.root_token')' -overwrite vault_unseal -token'${var.tfc_token}",
     ]
   }
   

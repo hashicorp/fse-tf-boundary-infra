@@ -10,7 +10,7 @@ Changelog:
 - Added stand alone ec2 instance hosting a 3 node vault cluster 
 - installed TF push on the vault cluster to send vault connection info to other workspaces
 - Northwinds psql database and roles for boundary demo - 12.15.21
-- 
+
 Todo:
 ===
 - Configure TFC provider to push kms_key_id to the boundary config workspace

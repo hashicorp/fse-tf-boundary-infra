@@ -47,6 +47,16 @@ resource "aws_security_group_rule" "allow_443" {
   security_group_id = aws_security_group.controller.id
 }
 
+resource "aws_security_group_rule" "allow_5432" {
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.controller.id
+
+}
+
 resource "aws_security_group_rule" "allow_egress_controller" {
   type              = "egress"
   from_port         = 0

@@ -151,7 +151,7 @@ resource "aws_instance" "vault" {
       "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_public_ip=${aws_instance.vault.public_ip}' -overwrite vault_public_ip -token ${var.tfc_token}"
     ]
   }
-
+  
 
 }
 resource "aws_instance" "controller" {

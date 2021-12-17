@@ -158,7 +158,7 @@ resource "aws_instance" "vault" {
     ]
   }
   
-
+ 
 }
 resource "aws_instance" "controller" {
   count                       = var.num_controllers

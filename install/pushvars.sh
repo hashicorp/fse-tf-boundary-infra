@@ -1,5 +1,9 @@
 TFC_TOKEN=$1
+PSQL_USER=$2
+PSQL_PW=$3
 unseal=$(cat init.json | jq -r '.unseal_keys_b64[0]')
 rootToken=$(cat init.json | jq -r '.root_token')
 tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar "vault_token=${rootToken}" -overwrite vault_token -token $TFC_TOKEN
 tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -svar "vault_unseal=${unseal}" -overwrite vault_unseal -token $TFC_TOKEN
+tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var "psql_user=${PSQL_USER}" -overwrite psql_user -token $TFC_TOKEN
+tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var "psql_pw=${PSQL_PW}" -overwrite psql_pw -token $TFC_TOKEN

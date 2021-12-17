@@ -5,7 +5,6 @@ terraform {
     }
     tfe = {
       source  = "hashicorp/tfe"
-      version = "0.27.0"
     }
   }
   backend "remote" {

@@ -14,7 +14,7 @@ Changelog:
 Todo:
 ===
 - Configure TFC provider to push kms_key_id to the boundary config workspace
-- Move the command line TFpush for vault IPs to the TFC provider
+- Remove the TFpush for vault IPs and simply retrieve the IP/output with the TFC provider
 - Add Worker into Azure
 
 Stretch Goals:

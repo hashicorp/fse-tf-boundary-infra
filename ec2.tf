@@ -146,8 +146,8 @@ resource "aws_instance" "vault" {
     inline = [
       #"unseal=$(cat init.json | jq -r '.unseal_keys_b64[0]')",
       #"rootToken=$(cat init.json | jq -r '.root_token')",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_token=$(cat init.json | jq -r '.unseal_keys_b64[0]')' -overwrite vault_token -token ${var.tfc_token}",
-      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_unseal=$(cat init.json | jq -r '.root_token')' -overwrite vault_unseal -token'${var.tfc_token}",
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_token=(cat init.json | jq -r '.unseal_keys_b64[0]')' -overwrite vault_token -token ${var.tfc_token}",
+      "tfh pushvars -org PublicSector-ATARC -name fse-tf-atarc-boundary-config -var 'vault_unseal=(cat init.json | jq -r '.root_token')' -overwrite vault_unseal -token'${var.tfc_token}",
     ]
   }
   

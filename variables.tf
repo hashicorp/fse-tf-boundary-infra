@@ -6,10 +6,6 @@ locals {
   priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)
 }
 
-variable "vault_token" {
-  type = string
-}
-
 variable "psql_pw" {
   type        = string
   description = "password to the psql database"
@@ -20,10 +16,6 @@ variable "psql_user" {
   description = "psql database username"
 }
 
-variable "vault_port" {
-  type        = string
-  description = "external port to hit vault"
-}
 
 variable "prefix" {
   default = "boundary-test"

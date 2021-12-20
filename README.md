@@ -14,6 +14,10 @@ Changelog:
 
 Todo:
 ===
+- Move boundary controller to private subnet
+- Update tfc Agent stuff to work with private subnet workloads: 
+    - Target vault and controller private IPs.
+    - allow private subnet peer communication
 - Update Boundary scope structure to something more ATARC-y
 - Add Worker into Azure
 - Add Target to Azure (simple SSH)

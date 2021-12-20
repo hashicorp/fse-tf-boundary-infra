@@ -266,7 +266,7 @@ resource "aws_instance" "tfc_agent" {
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
   subnet_id                   = aws_subnet.private[0].id
   key_name                    = aws_key_pair.boundary.key_name
-  vpc_security_group_ids      = [aws_security_group.tfc_agent.id]
+  vpc_security_group_ids      = ["${aws_instance.controller[0].public_ip}/32"]
   associate_public_ip_address = true
 
   connection {

@@ -92,7 +92,8 @@ resource "aws_instance" "vault" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.public_ip
+    host        = self.private_ip
+    bastion_host = aws_instance.controller.public_ip
   }
   provisioner "file" {
     on_failure  = continue

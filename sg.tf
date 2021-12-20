@@ -96,8 +96,21 @@ resource "aws_security_group" "vault" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    # Allow inbound SSS from anywhere
-    # should be using bastion for vault
+    # inbound bastion access for provisioning. Can be disabled after provisoining.
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_instance.controller.private_ip}/32"]
+  }
+  ingress {
+    # inbound vault UI access through boundary worker
+    from_port   = 8201
+    to_port     = 8203
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_instance.worker.private_ip}/32"]
+  }
+  ingress {
+    # Allow inbound SSS from anywhere. Using bastion for provisioning. This can be disabled for production
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"

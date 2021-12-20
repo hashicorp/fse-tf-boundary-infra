@@ -273,7 +273,7 @@ resource "aws_instance" "tfc_agent" {
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
     host        = self.private_ip
-    bastion_host = aws_instance.worker.public_ip
+    bastion_host = aws_instance.controller.public_ip
   }
   provisioner "remote-exec" {
     on_failure = continue

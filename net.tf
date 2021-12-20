@@ -10,11 +10,12 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 }
 
+# public network setup
+
 resource "aws_internet_gateway" "igateway1" {
   vpc_id = aws_vpc.main.id
 }
 
-# Subnets
 resource "aws_subnet" "public" {
   count             = var.num_subnets_public
   vpc_id            = aws_vpc.main.id
@@ -22,23 +23,6 @@ resource "aws_subnet" "public" {
   cidr_block        = local.pub_cidrs[count.index]
 }
 
-resource "aws_subnet" "private" {
-  count             = var.num_subnets_private
-  vpc_id            = aws_vpc.main.id
-  availability_zone = data.aws_availability_zones.available.names[0]
-  cidr_block        = local.priv_cidrs[count.index]
-}
-
-resource "aws_eip" "nat" {
-  count = var.num_subnets_private
-  vpc   = true
-}
-
-resource "aws_nat_gateway" "private" {
-  count         = var.num_subnets_private
-  subnet_id     = aws_subnet.private.*.id[count.index]
-  allocation_id = aws_eip.nat.*.id[count.index]
-}
 
 # Public Routes
 resource "aws_route_table" "public" {
@@ -63,7 +47,25 @@ resource "aws_route" "public_internet_gateway" {
   }
 }
 
-# Private Routes
+#private network setup
+resource "aws_subnet" "private" {
+  count             = var.num_subnets_private
+  vpc_id            = aws_vpc.main.id
+  availability_zone = data.aws_availability_zones.available.names[0]
+  cidr_block        = local.priv_cidrs[count.index]
+}
+
+#resource "aws_eip" "nat" {
+#  count = var.num_subnets_private
+#  vpc   = true
+#}
+#
+#resource "aws_nat_gateway" "private" {
+#  count         = var.num_subnets_private
+#  subnet_id     = aws_subnet.private.*.id[count.index]
+#  allocation_id = aws_eip.nat.*.id[count.index]
+#}
+#
 resource "aws_route_table" "private" {
   count  = var.num_subnets_private
   vpc_id = aws_vpc.main.id
@@ -72,14 +74,14 @@ resource "aws_route_table" "private" {
 resource "aws_route_table_association" "private" {
   count          = var.num_subnets_private
   subnet_id      = aws_subnet.private.*.id[count.index]
-  route_table_id = aws_route_table.private.*.id[count.index]
+  route_table_id = aws_route_table.public[0].id[count.index]
 }
 
 resource "aws_route" "nat_gateway" {
   count                  = var.num_subnets_private
   route_table_id         = aws_route_table.private.*.id[count.index]
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.private.*.id[count.index]
+  gateway_id             = aws_internet_gateway.igateway1.id
 
   timeouts {
     create = "5m"

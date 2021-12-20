@@ -169,7 +169,7 @@ resource "aws_instance" "controller" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.private
+    host        = self.private_ip
   }
   provisioner "file" {
     on_failure  = continue

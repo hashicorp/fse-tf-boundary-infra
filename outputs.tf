@@ -30,3 +30,7 @@ output "vault_private_ip" {
 output "kms_recovery_key_id" {
   value = aws_kms_key.recovery.id
 }
+
+output "worker_public_ip" {
+  value = aws_instance.worker[*].public_ip
+}

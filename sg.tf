@@ -117,7 +117,7 @@ resource "aws_security_group_rule" "allow_ssh_tfc" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["${aws_instance.worker.private_ip}/32"]
+  cidr_blocks       = [aws_security_group.worker]
   security_group_id = aws_security_group.tfc_agent.id
 }
 resource "aws_security_group_rule" "allow_outbound_tfc" {

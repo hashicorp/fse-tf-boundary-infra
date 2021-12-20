@@ -27,6 +27,7 @@ resource "aws_security_group_rule" "allow_ssh_controller" {
   security_group_id = aws_security_group.controller.id
 }
 
+# Allow worker to talk to tfc_agent for provisioning. Not needed in production
 resource "aws_security_group_rule" "allow_ssh_tfc" {
   type              = "ingress"
   from_port         = 22
@@ -161,4 +162,13 @@ resource "aws_security_group_rule" "allow_all_local_private" {
   protocol          = -1
   cidr_blocks       = [aws_subnet.private.cidr_block]
   security_group_id = aws_security_group.controller.id
-} 
+}
+
+resource "aws_security_group_rule" "allow_all_private_2_public" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = [aws_subnet.private.cidr_block]
+  security_group_id = aws_security_group.worker.id
+}

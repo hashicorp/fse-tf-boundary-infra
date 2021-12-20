@@ -32,7 +32,7 @@ resource "aws_instance" "worker" {
     type         = "ssh"
     user         = "ubuntu"
     private_key  = tls_private_key.boundary.private_key_pem
-    host         = self.private_ip
+    host         = self.public_ip
     bastion_host = aws_instance.controller.public_ip
   }
 
@@ -169,7 +169,7 @@ resource "aws_instance" "controller" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.private_ip
+    host        = self.public_ip
   }
   provisioner "file" {
     on_failure  = continue

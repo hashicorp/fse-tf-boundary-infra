@@ -12,11 +12,11 @@ output "keypair_pem" {
 }
 
 output "controller_public_ip" {
-  value = aws_instance.controller[*].public_ip
+  value = aws_instance.controller.public_ip
 }
 
 output "controller_private_ip" {
-  value = aws_instance.controller[*].private_ip
+  value = aws_instance.controller.private_ip
 }
 
 output "vault_public_ip" {
@@ -32,5 +32,5 @@ output "kms_recovery_key_id" {
 }
 
 output "worker_public_ip" {
-  value = aws_instance.worker[*].public_ip
+  value = aws_instance.worker.public_ip
 }

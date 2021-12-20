@@ -17,28 +17,24 @@ resource "aws_internet_gateway" "igateway" {
 }
 
 resource "aws_subnet" "public" {
-  count             = var.num_subnets_public
   vpc_id            = aws_vpc.main.id
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-  cidr_block        = local.pub_cidrs[count.index]
+  availability_zone = data.aws_availability_zones.available.names
+  cidr_block        = local.pub_cidrs
 }
 
 
 # Public Routes
 resource "aws_route_table" "public" {
-  count  = var.num_subnets_public
   vpc_id = aws_vpc.main.id
 }
 
 resource "aws_route_table_association" "public_subnets" {
-  count          = var.num_subnets_public
-  subnet_id      = aws_subnet.public.*.id[count.index]
-  route_table_id = aws_route_table.public.*.id[count.index]
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count                  = var.num_subnets_public
-  route_table_id         = aws_route_table.public.*.id[count.index]
+  route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igateway.id
 
@@ -49,10 +45,9 @@ resource "aws_route" "public_internet_gateway" {
 
 #private network setup
 resource "aws_subnet" "private" {
-  count             = var.num_subnets_private
   vpc_id            = aws_vpc.main.id
-  availability_zone = data.aws_availability_zones.available.names[0]
-  cidr_block        = local.priv_cidrs[count.index]
+  availability_zone = data.aws_availability_zones.available.names
+  cidr_block        = local.priv_cidrs
 }
 
 #resource "aws_eip" "nat" {
@@ -68,19 +63,16 @@ resource "aws_subnet" "private" {
 
 
 resource "aws_route_table" "private" {
-  count  = var.num_subnets_private
   vpc_id = aws_vpc.main.id
 }
 
 resource "aws_route_table_association" "private" {
-  count          = var.num_subnets_private
-  subnet_id      = aws_subnet.private.*.id[count.index]
-  route_table_id = aws_route_table.private.*.id[count.index]
+  subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
 }
 
 resource "aws_route" "private_gateway" {
-  count                  = var.num_subnets_private
-  route_table_id         = aws_route_table.private.*.id[count.index]
+  route_table_id         = aws_route_table.private.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igateway.id
 

@@ -18,8 +18,8 @@ resource "aws_internet_gateway" "igateway" {
 
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.main.id
-  availability_zone = data.aws_availability_zones.available.id
-  cidr_block        = local.pub_cidrs
+  availability_zone = data.aws_availability_zones.available.names[1]
+  cidr_block        = local.pub_cidrs[1]
 }
 
 
@@ -46,8 +46,8 @@ resource "aws_route" "public_internet_gateway" {
 #private network setup
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
-  availability_zone = data.aws_availability_zones.available.id
-  cidr_block        = local.priv_cidrs
+  availability_zone = data.aws_availability_zones.available.names[1]
+  cidr_block        = local.priv_cidrs[1]
 }
 
 resource "aws_route_table" "private" {

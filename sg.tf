@@ -22,6 +22,13 @@ resource "aws_security_group" "controller" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+    ingress {
+    # Allow access to Boundary UI from anywhere
+    from_port   = 9201
+    to_port     = 9201
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   ingress {
     # allow everyone access to psql. Do not do in production
     from_port   = 5432
@@ -110,7 +117,7 @@ resource "aws_security_group" "vault" {
     cidr_blocks = ["${aws_instance.worker.private_ip}/32"]
   }
   ingress {
-    # Allow inbound SSS from anywhere. Using bastion for provisioning. This can be disabled for production
+    # Allow inbound SSS from anywhere. Using bastion for provisioning. This should be disabled for production
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -151,14 +158,3 @@ resource "aws_security_group" "tfc_agent" {
   }
 
 }
-
-#resource "aws_security_group_rule" "allow_9201_controller" {
-#  type              = "ingress"
-#  from_port         = 9201
-#  to_port           = 9201
-#  protocol          = "tcp"
-#  cidr_blocks       = ["0.0.0.0/0"]
-#  security_group_id = aws_security_group.controller.id
-#}
-
-

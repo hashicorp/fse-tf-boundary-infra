@@ -2,8 +2,8 @@ resource "random_pet" "test" {
   length = 1
 }
 locals {
-  pub_cidrs  = cidrsubnets("10.0.0.0/24", 4, 4, 4, 4)
-  priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)
+  pub_cidrs  = "10.0.0.0/24"
+  priv_cidrs = "10.0.100.0/24"
 }
 
 variable "psql_pw" {

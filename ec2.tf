@@ -264,7 +264,7 @@ resource "aws_instance" "tfc_agent" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public[0].id
+  subnet_id                   = aws_subnet.private[0].id
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.tfc_agent.id]
   associate_public_ip_address = true
@@ -273,7 +273,8 @@ resource "aws_instance" "tfc_agent" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.public_ip
+    host        = self.private_ip
+    bastionbastion_host = aws_instance.controller[0].public_ip
   }
   provisioner "remote-exec" {
     on_failure = continue

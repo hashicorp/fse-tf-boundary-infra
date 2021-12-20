@@ -279,6 +279,7 @@ resource "aws_instance" "tfc_agent" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
+      "sudo apt -y update",
       "sudo apt -y install unzip",
       "wget https://releases.hashicorp.com/tfc-agent/1.0.2/tfc-agent_1.0.2_linux_amd64.zip",
       "unzip tfc-agent_1.0.2_linux_amd64.zip",

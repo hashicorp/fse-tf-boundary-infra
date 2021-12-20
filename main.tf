@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 provider "tfe" {
-  token    = var.tfc_token
+  token = var.tfc_token
 }
 
 data "tfe_workspace" "boundary_config" {

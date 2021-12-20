@@ -65,5 +65,5 @@ variable "tfc_token" {
 }
 
 variable "tfc_agent_token" {
-description = "TFC agent token!!"
+  description = "TFC agent token!!"
 }

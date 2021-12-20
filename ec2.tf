@@ -106,7 +106,7 @@ resource "aws_instance" "vault" {
     destination = "~/config.hcl"
   }
 
-    provisioner "file" {
+  provisioner "file" {
     on_failure  = continue
     source      = "${path.module}/install/pushvars.sh"
     destination = "~/pushvars.sh"
@@ -153,8 +153,8 @@ resource "aws_instance" "vault" {
       "sudo bash pushvars.sh ${var.tfc_token} ${var.psql_user} ${var.psql_pw}"
     ]
   }
-  
- 
+
+
 }
 resource "aws_instance" "controller" {
   ami                         = data.aws_ami.ubuntu.id
@@ -269,10 +269,10 @@ resource "aws_instance" "tfc_agent" {
   associate_public_ip_address = true
 
   connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = tls_private_key.boundary.private_key_pem
-    host        = self.private_ip
+    type         = "ssh"
+    user         = "ubuntu"
+    private_key  = tls_private_key.boundary.private_key_pem
+    host         = self.private_ip
     bastion_host = aws_instance.controller.public_ip
   }
   provisioner "remote-exec" {

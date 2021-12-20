@@ -4,7 +4,7 @@ terraform {
       source = "hashicorp/aws"
     }
     tfe = {
-      source  = "hashicorp/tfe"
+      source = "hashicorp/tfe"
     }
   }
   backend "remote" {

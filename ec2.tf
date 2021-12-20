@@ -259,3 +259,31 @@ resource "aws_instance" "controller" {
 #  key_name               = aws_key_pair.boundary.key_name
 #  vpc_security_group_ids = [aws_security_group.worker.id]
 #}
+
+resource "aws_instance" "tfc_agent" {
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  iam_instance_profile        = aws_iam_instance_profile.boundary.name
+  subnet_id                   = aws_subnet.private[0].id
+  key_name                    = aws_key_pair.boundary.key_name
+  vpc_security_group_ids      = [aws_security_group.tfc_agent.id]
+  associate_public_ip_address = true
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.boundary.private_key_pem
+    host        = self.public_ip
+  }
+  provisioner "remote-exec" {
+    on_failure = continue
+    inline = [
+      "sudo apt -y install unzip",
+      "wget https://releases.hashicorp.com/tfc-agent/1.0.2/tfc-agent_1.0.2_linux_amd64.zip",
+      "unzip tfc-agent_1.0.2_linux_amd64.zip",
+      "export TFC_AGENT_TOKEN=${var.tfc_agent_token}",
+      "export TFC_AGENT_NAME=atarc_aws_enclave_01",
+      "./tfc-agent"
+    ]
+  }
+}

@@ -80,7 +80,7 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_route" "private_gateway" {
   count                  = var.num_subnets_private
-  route_table_id         = aws_route_table.private.id
+  route_table_id         = aws_route_table.private.*.id[count.index]
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igateway.id
 

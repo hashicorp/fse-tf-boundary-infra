@@ -286,7 +286,7 @@ resource "aws_instance" "tfc_agent" {
       "unzip tfc-agent_1.0.2_linux_amd64.zip",
       "export TFC_AGENT_TOKEN=${var.tfc_agent_token}",
       "export TFC_AGENT_NAME=atarc_aws_enclave_01",
-      "./tfc-agent &"
+      "nohup ./tfc-agent &"
     ]
   }
 }

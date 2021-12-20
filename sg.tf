@@ -58,15 +58,15 @@ resource "aws_security_group_rule" "allow_5432" {
 
 }
 
-#resource "aws_security_group_rule" "allow_all_local" {
-#  type              = "ingress"
-#  from_port         = 0
-#  to_port           = 0
-#  protocol          = -1
-#  cidr_blocks       = [aws_subnet.private.cidr_block]
-#  security_group_id = aws_security_group.controller.id
-#
-#}
+resource "aws_security_group_rule" "allow_all_local" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = [aws_subnet.private.cidr_block]
+  security_group_id = aws_security_group.controller.id
+
+}
 
 resource "aws_security_group_rule" "allow_egress_controller" {
   type              = "egress"

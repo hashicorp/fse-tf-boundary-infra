@@ -106,6 +106,8 @@ resource "aws_security_group_rule" "allow_egress_worker" {
   security_group_id = aws_security_group.worker.id
 }
 
+# TFC_agent Rules
+
 resource "aws_security_group" "tfc_agent" {
   vpc_id = aws_vpc.main.id
 }

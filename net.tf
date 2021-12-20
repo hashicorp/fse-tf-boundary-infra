@@ -15,6 +15,9 @@ resource "aws_vpc" "main" {
 resource "aws_internet_gateway" "igateway1" {
   vpc_id = aws_vpc.main.id
 }
+resource "aws_internet_gateway" "igateway2" {
+  vpc_id = aws_vpc.main.id
+}
 
 resource "aws_subnet" "public" {
   count             = var.num_subnets_public
@@ -65,7 +68,8 @@ resource "aws_subnet" "private" {
 #  subnet_id     = aws_subnet.private.*.id[count.index]
 #  allocation_id = aws_eip.nat.*.id[count.index]
 #}
-#
+
+
 resource "aws_route_table" "private" {
   count  = var.num_subnets_private
   vpc_id = aws_vpc.main.id
@@ -81,7 +85,7 @@ resource "aws_route" "nat_gateway" {
   count                  = var.num_subnets_private
   route_table_id         = aws_route_table.private.*.id[count.index]
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.igateway1.id
+  gateway_id             = aws_internet_gateway.igateway2.id
 
   timeouts {
     create = "5m"

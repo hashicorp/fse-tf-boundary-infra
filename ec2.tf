@@ -20,11 +20,10 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "worker" {
-  count                       = var.num_workers
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public.*.id[count.index]
+  subnet_id                   = aws_subnet.public.id
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.worker.id]
   associate_public_ip_address = true
@@ -34,14 +33,14 @@ resource "aws_instance" "worker" {
     user         = "ubuntu"
     private_key  = tls_private_key.boundary.private_key_pem
     host         = self.private_ip
-    bastion_host = aws_instance.controller[count.index].public_ip
+    bastion_host = aws_instance.controller.public_ip
   }
 
   provisioner "file" {
     on_failure = continue
     content = templatefile("${path.module}/install/worker.hcl.tpl", {
       controller_ips         = aws_instance.controller.*.private_ip
-      name_suffix            = count.index
+      name_suffix            = ""
       region                 = "us-east-1"
       public_ip              = self.public_ip
       private_ip             = self.private_ip
@@ -158,11 +157,10 @@ resource "aws_instance" "vault" {
  
 }
 resource "aws_instance" "controller" {
-  count                       = var.num_controllers
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public.*.id[count.index]
+  subnet_id                   = aws_subnet.public.id
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.controller.id]
   associate_public_ip_address = true
@@ -195,7 +193,7 @@ resource "aws_instance" "controller" {
   provisioner "file" {
     on_failure = continue
     content = templatefile("${path.module}/install/controller.hcl.tpl", {
-      name_suffix            = count.index
+      name_suffix            = ""
       db_endpoint            = "postgresql://${var.psql_user}:${var.psql_pw}@localhost/boundary?sslmode=disable"
       private_ip             = self.private_ip
       tls_disabled           = var.tls_disabled
@@ -265,7 +263,7 @@ resource "aws_instance" "tfc_agent" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.private[0].id
+  subnet_id                   = aws_subnet.private.id
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.tfc_agent.id]
   associate_public_ip_address = true
@@ -275,7 +273,7 @@ resource "aws_instance" "tfc_agent" {
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
     host        = self.private_ip
-    bastion_host = aws_instance.worker[0].public_ip
+    bastion_host = aws_instance.worker.public_ip
   }
   provisioner "remote-exec" {
     on_failure = continue

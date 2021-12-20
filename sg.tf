@@ -106,7 +106,6 @@ resource "aws_security_group_rule" "allow_5432_controller" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.controller.id
-
 }
 
 resource "aws_security_group_rule" "allow_egress_controller" {
@@ -155,7 +154,7 @@ resource "aws_security_group_rule" "allow_outbound_tfc" {
   security_group_id = aws_security_group.tfc_agent.id
 }
 
-resource "aws_security_group_rule" "allow_all_local_private" {
+resource "aws_security_group_rule" "allow_private_to_controller" {
   type              = "ingress"
   from_port         = 0
   to_port           = 0
@@ -164,11 +163,20 @@ resource "aws_security_group_rule" "allow_all_local_private" {
   security_group_id = aws_security_group.controller.id
 }
 
-resource "aws_security_group_rule" "allow_all_private_2_public" {
+resource "aws_security_group_rule" "allow_private_to_worker" {
   type              = "ingress"
   from_port         = 0
   to_port           = 0
   protocol          = -1
   cidr_blocks       = [aws_subnet.private.cidr_block]
   security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "allow_private_to_vault" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = [aws_subnet.private.cidr_block]
+  security_group_id = aws_security_group.vault.id
 }

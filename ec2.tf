@@ -272,7 +272,7 @@ resource "aws_instance" "tfc_agent" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.public_ip
+    host        = self.private_ip
     bastion_host = aws_instance.worker.public_ip
   }
   provisioner "remote-exec" {

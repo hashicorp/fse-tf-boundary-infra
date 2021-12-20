@@ -1,15 +1,15 @@
 resource "aws_security_group" "controller" {
-  name = "controller sg"
+  name = "controller_sg"
   vpc_id = aws_vpc.main.id
 }
 
 resource "aws_security_group" "worker" {
-  name = "worker sg"
+  name = "worker_sg"
   vpc_id = aws_vpc.main.id
 }
 
 resource "aws_security_group" "vault" {
-  name = "vault sg"
+  name = "vault_sg"
   vpc_id = aws_vpc.main.id
 }
 

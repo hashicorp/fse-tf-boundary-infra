@@ -83,7 +83,7 @@ resource "aws_instance" "vault" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.small"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public.id
+  subnet_id                   = aws_subnet.private.id
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.controller.id]
   associate_public_ip_address = true
@@ -92,7 +92,7 @@ resource "aws_instance" "vault" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.public_ip
+    host        = self.private_ip
   }
   provisioner "file" {
     on_failure  = continue
@@ -160,7 +160,7 @@ resource "aws_instance" "controller" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public.id
+  subnet_id                   = aws_subnet.private.id
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.controller.id]
   associate_public_ip_address = true
@@ -169,7 +169,7 @@ resource "aws_instance" "controller" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.boundary.private_key_pem
-    host        = self.public_ip
+    host        = self.private
   }
   provisioner "file" {
     on_failure  = continue

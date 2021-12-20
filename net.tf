@@ -75,7 +75,7 @@ resource "aws_route_table" "private" {
 resource "aws_route_table_association" "private" {
   count          = var.num_subnets_private
   subnet_id      = aws_subnet.private.*.id[count.index]
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private.*.id[count.index]
 }
 
 resource "aws_route" "private_gateway" {

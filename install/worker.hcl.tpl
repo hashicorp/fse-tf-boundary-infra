@@ -23,6 +23,10 @@ worker {
     "${ip}",
 %{ endfor ~}
   ]
+  tags {
+    type   = ["prod", "webservers"]
+    region = ["${region}"]
+  }
 }
 
 %{ if kms_type == "aws" }

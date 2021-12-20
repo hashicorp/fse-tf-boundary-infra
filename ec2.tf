@@ -42,6 +42,7 @@ resource "aws_instance" "worker" {
     content = templatefile("${path.module}/install/worker.hcl.tpl", {
       controller_ips         = aws_instance.controller.*.private_ip
       name_suffix            = count.index
+      region                 = "us-east-1"
       public_ip              = self.public_ip
       private_ip             = self.private_ip
       tls_disabled           = var.tls_disabled

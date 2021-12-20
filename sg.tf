@@ -58,7 +58,7 @@ resource "aws_security_group_rule" "allow_5432" {
 
 }
 
-resource "aws_security_group_rule" "allow_5432" {
+resource "aws_security_group_rule" "allow_all_local" {
   type              = "ingress"
   from_port         = 0
   to_port           = 0

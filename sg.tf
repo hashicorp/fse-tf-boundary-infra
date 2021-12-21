@@ -26,7 +26,7 @@ resource "aws_security_group" "controller" {
     # Allow access to Boundary UI from anywhere
     from_port   = 9201
     to_port     = 9201
-    protocol    = "tcp"
+    protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
@@ -73,7 +73,7 @@ resource "aws_security_group" "worker" {
   ingress {
     from_port   = 9202
     to_port     = 9202
-    protocol    = "tcp"
+    protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {

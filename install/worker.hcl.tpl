@@ -1,5 +1,5 @@
 listener "tcp" {
-  address = "${private_ip}:9202"
+  address = "[::]:9202"
 	purpose = "proxy"
 %{ if tls_disabled == true }
 	tls_disable                       = true

@@ -39,7 +39,7 @@ resource "aws_instance" "worker" {
   provisioner "file" {
     on_failure = continue
     content = templatefile("${path.module}/install/worker.hcl.tpl", {
-      controller_ips         = aws_instance.controller.*.private_ip
+      controller_ips         = aws_instance.controller.public_ip
       name_suffix            = ""
       region                 = "us-east-1"
       public_ip              = self.public_ip

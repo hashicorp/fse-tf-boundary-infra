@@ -16,13 +16,8 @@ provider "tfe" {
   token = var.tfc_token
 }
 
-data "tfe_workspace" "atarc_vpc" {
-  name         = "fse-tf-atarc-aws-vpc"
-  organization = "PublicSector-ATARC"
-}
-
 data "tfe_outputs" "vpc" {
-  workspace         = data.tfe_workspace.atarc_vpc.name
+  workspace         = "fse-tf-atarc-aws-vpc"
   organization = "PublicSector-ATARC"
 }
 

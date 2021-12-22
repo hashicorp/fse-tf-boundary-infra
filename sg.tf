@@ -48,7 +48,7 @@ resource "aws_security_group" "controller" {
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    security_groups = local.private_sub_cidrs
+    cidr_blocks = local.private_sub_cidrs
   }
 }
 

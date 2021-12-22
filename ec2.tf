@@ -23,7 +23,7 @@ resource "aws_instance" "worker" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public.id
+  subnet_id                   = local.public_subs[1]
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.worker.id]
   associate_public_ip_address = true
@@ -79,90 +79,11 @@ resource "aws_instance" "worker" {
   depends_on = [aws_instance.controller]
 }
 
-
-resource "aws_instance" "vault" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.small"
-  iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.private.id
-  key_name                    = aws_key_pair.boundary.key_name
-  vpc_security_group_ids      = [aws_security_group.vault.id]
-  associate_public_ip_address = true
-
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = tls_private_key.boundary.private_key_pem
-    host        = self.private_ip
-    bastion_host = aws_instance.controller.public_ip
-  }
-  provisioner "file" {
-    on_failure  = continue
-    source      = "${path.module}/install/vault_install.sh"
-    destination = "~/vault_install.sh"
-  }
-
-  provisioner "file" {
-    on_failure  = continue
-    source      = "${path.module}/install/config.hcl"
-    destination = "~/config.hcl"
-  }
-
-  provisioner "file" {
-    on_failure  = continue
-    source      = "${path.module}/install/pushvars.sh"
-    destination = "~/pushvars.sh"
-  }
-
-  provisioner "remote-exec" {
-    on_failure = continue
-    inline = [
-      "sudo mkdir -p /etc/pki/tls/boundary",
-      "echo '${tls_private_key.boundary.private_key_pem}' | sudo tee ${var.tls_key_path}",
-      "echo '${tls_self_signed_cert.boundary.cert_pem}' | sudo tee ${var.tls_cert_path}",
-    ]
-  }
-  provisioner "remote-exec" {
-    on_failure = continue
-    inline = [
-      "sudo apt update",
-      "mkdir ~/vault",
-      "mv ~/config.hcl ~/vault/config.hcl",
-      #setup docker
-      "sudo apt-get install ca-certificates curl gnupg lsb-release",
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
-      "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
-      "sudo apt-get -y update",
-      "sudo apt-get -y install docker-ce docker-ce-cli containerd.io",
-      #install vault CLI
-      "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
-      "sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
-      "sudo apt-get update && sudo apt-get install vault",
-      #stand up cluster
-      "sudo apt-get install -y jq curl",
-      "sudo bash vault_install.sh",
-      #install Terraform helper
-      "sudo apt-get upgrade -y coreutils",
-      "git clone https://github.com/hashicorp-community/tf-helper.git",
-      "cd tf-helper/tfh/bin",
-      "sudo ln -s $PWD/tfh /usr/local/bin/tfh",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    on_failure = continue
-    inline = [
-      "sudo bash pushvars.sh ${var.tfc_token} ${var.psql_user} ${var.psql_pw}"
-    ]
-  }
-
-
-}
 resource "aws_instance" "controller" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.public.id
+  subnet_id                   = local.public_subs[1]
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.controller.id]
   associate_public_ip_address = true
@@ -265,7 +186,7 @@ resource "aws_instance" "tfc_agent" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
-  subnet_id                   = aws_subnet.private.id
+  subnet_id                   = local.private_subs[1]
   key_name                    = aws_key_pair.boundary.key_name
   vpc_security_group_ids      = [aws_security_group.tfc_agent.id]
   associate_public_ip_address = true

@@ -1,9 +1,9 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
   default_tags {
     tags = {
       owner              = "Luke McCleary"
-      se-region          = "AMER-East E2"
+      se-region          = "AMER-East Federal E2"
       purpose            = "boundry infra for zero trust demo"
       ttl                = "48"
       terraform          = "true"
@@ -16,7 +16,18 @@ provider "tfe" {
   token = var.tfc_token
 }
 
-data "tfe_workspace" "boundary_config" {
-  name         = "fse-tf-atarc-boundary-config"
+data "tfe_workspace" "atarc_vpc" {
+  name         = "fse-tf-atarc-aws-vpc"
   organization = "PublicSector-ATARC"
+}
+
+data "tfe_outputs" "vpc" {
+  workspace         = data.tfe_workspace.atarc_vpc.name
+  organization = "PublicSector-ATARC"
+}
+
+locals {
+  vpc_id = data.tfe_outputs.vpc.values.vpc_id
+  private_subs = data.tfe_outputs.vpc.values.public_subnet_ids
+  public_subs = data.tfe_outputs.vpc.values.public_subnet_ids
 }

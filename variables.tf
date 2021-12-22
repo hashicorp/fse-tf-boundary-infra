@@ -1,9 +1,9 @@
 variable "region" {
 }
 
-#resource "random_pet" "test" {
-#  length = 1
-#}
+resource "random_pet" "test" {
+  length = 1
+}
 locals {
   pub_cidrs  = cidrsubnets("10.0.0.0/24", 4, 4, 4, 4)
   priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)

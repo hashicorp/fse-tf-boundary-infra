@@ -25,4 +25,6 @@ locals {
   vpc_id = data.tfe_outputs.vpc.values.vpc_id
   private_subs = data.tfe_outputs.vpc.values.public_subnet_ids
   public_subs = data.tfe_outputs.vpc.values.public_subnet_ids
+  public_sub_cidr = data.tfe_outputs.vpc.values.public_subnet_ids.cidr_block
+  private_sub_cidr = data.tfe_outputs.vpc.values.public_subnet_ids.cidr_block
 }

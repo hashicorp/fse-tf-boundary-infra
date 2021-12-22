@@ -48,7 +48,7 @@ resource "aws_security_group" "controller" {
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    cidr_blocks = [local.private_subs.cidr_block]
+    cidr_blocks = [local.public_sub_cidr]
   }
 }
 
@@ -88,14 +88,14 @@ resource "aws_security_group" "worker" {
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    cidr_blocks = [local.private_subs.cidr_block]
+    cidr_blocks = [local.private_sub_cidr]
   }
   ingress {
     # allow all inbound traffic from private subnet
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    cidr_blocks = [local.public_subs.cidr_block]
+    cidr_blocks = [local.public_sub_cidr]
   }
 }
 
@@ -115,7 +115,7 @@ resource "aws_security_group" "tfc_agent" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [local.public_subs.cidr_block]
+    cidr_blocks = [local.public_sub_cidr]
   }
 
 }

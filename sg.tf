@@ -65,6 +65,14 @@ resource "aws_security_group" "boundary" {
   }
 }
 
+resource "aws_security_group_rule" "boundary_allow_self" {
+    type        = "ingress"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    security_group_id = aws_security_group.boundary.id
+}
+
 resource "aws_security_group" "tfc_agent" {
   name   = "tfc_Agent_sg"
   vpc_id = local.vpc_id

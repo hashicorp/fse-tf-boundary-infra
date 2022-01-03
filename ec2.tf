@@ -25,7 +25,7 @@ resource "aws_instance" "worker" {
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
   subnet_id                   = local.public_subs[1]
   key_name                    = aws_key_pair.boundary.key_name
-  vpc_security_group_ids      = [aws_security_group.worker.id]
+  vpc_security_group_ids      = [aws_security_group.boundary.id]
   associate_public_ip_address = true
 
   connection {
@@ -40,7 +40,7 @@ resource "aws_instance" "worker" {
     on_failure = continue
     content = templatefile("${path.module}/install/worker.hcl.tpl", {
       controller_public_ip   = aws_instance.controller.public_ip
-      controller_private_ip   = aws_instance.controller.private_ip
+      controller_private_ip  = aws_instance.controller.private_ip
       name_suffix            = ""
       region                 = "us-east-1"
       public_ip              = self.public_ip
@@ -85,7 +85,7 @@ resource "aws_instance" "controller" {
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
   subnet_id                   = local.public_subs[1]
   key_name                    = aws_key_pair.boundary.key_name
-  vpc_security_group_ids      = [aws_security_group.controller.id]
+  vpc_security_group_ids      = [aws_security_group.boundary.id]
   associate_public_ip_address = true
 
   connection {

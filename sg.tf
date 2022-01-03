@@ -1,5 +1,5 @@
-resource "aws_security_group" "controller" {
-  name   = "controller_sg"
+resource "aws_security_group" "boundary" {
+  name   = "boundary_sg"
   vpc_id = local.vpc_id
   egress {
     # allow all outbound
@@ -7,6 +7,13 @@ resource "aws_security_group" "controller" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    # allow all inbound traffic from self
+    from_port       = 0
+    to_port         = 0
+    protocol        = -1
+    security_groups = [aws_security_group.boundary.id]
   }
   ingress {
     # Allow inbound SSS from anywhere
@@ -22,7 +29,7 @@ resource "aws_security_group" "controller" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-    ingress {
+  ingress {
     # Allow access to Boundary UI from anywhere
     from_port   = 9201
     to_port     = 9201
@@ -33,40 +40,6 @@ resource "aws_security_group" "controller" {
     # allow everyone access to psql. Do not do in production
     from_port   = 5432
     to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    # Allow access to Boundary https from anywhere
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    # allow all inbound traffic from private subnet
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = local.private_sub_cidrs
-  }
-}
-
-resource "aws_security_group" "worker" {
-  name   = "worker_sg"
-  vpc_id = local.vpc_id
-
-  egress {
-    # allow all outbound
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    # Allow inbound SSH from anywhere
-    from_port   = 22
-    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -84,14 +57,13 @@ resource "aws_security_group" "worker" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    # allow all inbound traffic from private subnet
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = local.private_sub_cidrs
+    # Allow access to Boundary https from anywhere
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 
 resource "aws_security_group" "tfc_agent" {
   name   = "tfc_Agent_sg"
@@ -110,5 +82,4 @@ resource "aws_security_group" "tfc_agent" {
     protocol    = "tcp"
     cidr_blocks = local.public_sub_cidrs
   }
-
 }

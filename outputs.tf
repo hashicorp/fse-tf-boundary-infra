@@ -22,3 +22,7 @@ output "worker_public_ip" {
 output "worker_private_ip" {
   value = aws_instance.worker.private_ip
 }
+
+output "controller_sg_id" {
+  value = aws_security_group.boundary.id
+}

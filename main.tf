@@ -17,14 +17,14 @@ provider "tfe" {
 }
 
 data "tfe_outputs" "vpc" {
-  workspace         = "fse-tf-atarc-aws-vpc"
+  workspace    = "fse-tf-atarc-aws-vpc"
   organization = "PublicSector-ATARC"
 }
 
 locals {
-  vpc_id = data.tfe_outputs.vpc.values.vpc_id
-  private_subs = data.tfe_outputs.vpc.values.public_subnet_ids
-  public_subs = data.tfe_outputs.vpc.values.public_subnet_ids
-  public_sub_cidrs = data.tfe_outputs.vpc.values.public_sub_cidrs
+  vpc_id            = data.tfe_outputs.vpc.values.vpc_id
+  private_subs      = data.tfe_outputs.vpc.values.public_subnet_ids
+  public_subs       = data.tfe_outputs.vpc.values.public_subnet_ids
+  public_sub_cidrs  = data.tfe_outputs.vpc.values.public_sub_cidrs
   private_sub_cidrs = data.tfe_outputs.vpc.values.private_sub_cidrs
 }

@@ -31,3 +31,4 @@ override.tf.json
 # example: *tfplan*
 .terraform.lock.hcl
 boundary troubleshooting
+install/scratch.sh

@@ -18,7 +18,7 @@ worker {
 	public_addr = "${public_ip}"
 	name = "demo-worker-${name_suffix}"
 	description = "A default worker created for demonstration"
-	controllers = [${controller_public_ip}]
+	controllers = [${controller_private_ip}]
   tags {
     type   = ["prod", "webservers"]
     region = ["${region}"]

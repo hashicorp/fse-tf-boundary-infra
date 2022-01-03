@@ -42,7 +42,7 @@ resource "aws_instance" "worker" {
       controller_public_ip   = aws_instance.controller.public_ip
       controller_private_ip  = aws_instance.controller.private_ip
       name_suffix            = ""
-      region                 = "us-east-1"
+      region                 = var.region
       public_ip              = self.public_ip
       private_ip             = self.private_ip
       tls_disabled           = var.tls_disabled
@@ -59,18 +59,25 @@ resource "aws_instance" "worker" {
     source      = "${path.module}/install/install.sh"
     destination = "~/install.sh"
   }
+
+
+  provisioner "remote-exec" {
+    on_failure = continue
+    inline = [
+      "sudo mkdir -p /etc/pki/tls/boundary",
+      "echo '${tls_private_key.boundary.private_key_pem}' | sudo tee ${var.tls_key_path}",
+      "echo '${tls_self_signed_cert.boundary.cert_pem}' | sudo tee ${var.tls_cert_path}",
+    ]
+  }
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
       "sudo apt install unzip",
       "wget https://releases.hashicorp.com/boundary/0.7.1/boundary_0.7.1_linux_amd64.zip",
       "unzip boundary_0.7.1_linux_amd64.zip -d ~/boundary",
-      "sudo mkdir -p /etc/pki/tls/boundary",
       "sudo mv ~/boundary/boundary /usr/local/bin/boundary",
       "sudo chmod 0755 /usr/local/bin/boundary",
-      "echo '${tls_private_key.boundary.private_key_pem}' | sudo tee ${var.tls_key_path}",
-      "echo '${tls_self_signed_cert.boundary.cert_pem}' | sudo tee ${var.tls_cert_path}",
-      "sudo mv ~/boundary-controller.hcl /etc/boundary-controller.hcl",
+      "sudo mv ~/boundary-worker.hcl /etc/boundary-worker.hcl",
       "sudo chmod 0755 ~/install.sh",
       "sudo ~/./install.sh worker"
     ]

@@ -15,7 +15,7 @@ controller {
 }
 
 listener "tcp" {
-  address                           = "[::]:9200"
+  address                           = "${private_ip}:9200"
 	purpose                           = "api"
 %{ if tls_disabled == true }
 	tls_disable                       = true
@@ -31,7 +31,7 @@ listener "tcp" {
 }
 
 listener "tcp" {
-  address                           = "[::]:9201"
+  address                           = "${private_ip}:9201"
 	purpose                           = "cluster"
 %{ if tls_disabled == true }
 	tls_disable                       = true

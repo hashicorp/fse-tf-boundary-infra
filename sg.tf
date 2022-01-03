@@ -71,6 +71,7 @@ resource "aws_security_group_rule" "boundary_allow_self" {
     to_port     = 0
     protocol    = "-1"
     source_security_group_id = aws_security_group.boundary.id
+    security_group_id = aws_security_group.boundary.id
 }
 
 resource "aws_security_group" "tfc_agent" {

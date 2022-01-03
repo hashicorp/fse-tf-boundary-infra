@@ -13,7 +13,7 @@ resource "aws_security_group" "boundary" {
     from_port       = 0
     to_port         = 0
     protocol        = -1
-    security_groups = [aws_security_group.boundary.id]
+    cidr_blocks = [locals.public_sub_cidrs]
   }
   ingress {
     # Allow inbound SSS from anywhere

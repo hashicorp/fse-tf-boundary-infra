@@ -18,11 +18,11 @@ worker {
 	public_addr = "${public_ip}"
 	name = "demo-worker-${name_suffix}"
 	description = "A default worker created for demonstration"
-	controllers = [${controller_private_ip}]
-  tags {
-    type   = ["prod", "webservers"]
-    region = ["${region}"]
-  }
+	controllers = ["${controller_private_ip}"]
+  # tags {
+  #   type   = ["prod", "webservers"]
+  #   region = ["${region}"]
+  # }
 }
 
 %{ if kms_type == "aws" }

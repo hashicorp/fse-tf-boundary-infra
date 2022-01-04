@@ -72,16 +72,15 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
     on_failure = continue
     inline = [
-      "sudo apt update",
-      "sudo apt install unzip",
+      "sudo apt -y update",
+      "sudo apt -y install unzip",
       "wget https://releases.hashicorp.com/boundary/0.7.1/boundary_0.7.1_linux_amd64.zip",
       "unzip boundary_0.7.1_linux_amd64.zip -d ~/boundary",
-      "sudo mkdir -p /usr/local/bin/boundary",
       "sudo mv ~/boundary/boundary /usr/local/bin/boundary",
       "sudo chmod 0755 /usr/local/bin/boundary",
       "sudo mv ~/boundary-worker.hcl /etc/boundary-worker.hcl",
       "sudo chmod 0755 ~/install.sh",
-      "sudo ~/./install.sh worker"
+      "sudo ~/./install.sh worker",
     ]
   }
 

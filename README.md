@@ -11,27 +11,16 @@ Changelog:
 - Installed TF push on the vault cluster to send vault connection info to other workspaces
 - Northwinds psql database and roles for boundary demo - 12.15.21
 - Configured TFC provider to push kms_key_id to the boundary config workspace 12.17.21
+- Added TFC Agent for private subnet terraform access
+- OIDC enabled for auth0
 
-Todo:
+Stretch Goals:
 ===
-- set TFC bastion workflow through worker
-- setup bastion for vault and remove global ssh access
-- Move boundary controller to private subnet
-- Update tfc Agent stuff to work with private subnet workloads: 
-    - Target vault and controller private IPs.
-    - allow private subnet peer communication
-- Update Boundary scope structure to something more ATARC-y
 - Add Worker into Azure
-- Add Target to Azure (simple SSH)
+
+- Add an Azure dynamic Host Set: https://learn.hashicorp.com/tutorials/boundary/cloud-host-catalogs
 - Setup worker tags for target aware workers: https://learn.hashicorp.com/tutorials/boundary/target-aware-workers?in=boundary/configuration
     - psql in aws
     - ssh in aws
     - ssh in azure
     - RDP in Azure? 
-
-- Establish demo flow and test all use cases
-
-Stretch Goals:
-===
-- OIDC with vault or auth0
-- Add an Azure dynamic Host Set: https://learn.hashicorp.com/tutorials/boundary/cloud-host-catalogs

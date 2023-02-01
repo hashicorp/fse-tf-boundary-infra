@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "keypair_pem" {
   value     = tls_private_key.boundary.private_key_pem
   sensitive = true

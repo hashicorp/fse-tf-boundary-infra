@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_security_group" "boundary" {
   name   = "boundary_sg"
   vpc_id = local.vpc_id

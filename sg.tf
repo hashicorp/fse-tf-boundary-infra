@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2021, 2026
+
 resource "aws_security_group" "boundary" {
   name   = "boundary_sg"
   vpc_id = local.vpc_id

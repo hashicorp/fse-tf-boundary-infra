@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2021, 2026
+
 output "keypair_pem" {
   value     = tls_private_key.boundary.private_key_pem
   sensitive = true

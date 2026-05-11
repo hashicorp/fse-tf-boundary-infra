@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2021, 2026
+
 resource "aws_key_pair" "boundary" {
   key_name   = "${var.prefix}-${random_pet.test.id}"
   public_key = tls_private_key.boundary.public_key_openssh

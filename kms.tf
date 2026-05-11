@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2021, 2026
+
 resource "aws_kms_key" "root" {
   description             = "Boundary root key"
   deletion_window_in_days = 10

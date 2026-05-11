@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2021, 2026
+
 # Installs the boundary as a service for systemd on linux
 TYPE=$1
 NAME=boundary

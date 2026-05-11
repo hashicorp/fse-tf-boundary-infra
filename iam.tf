@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2021, 2026
+
 resource "aws_iam_role" "boundary" {
   name = "${var.prefix}-${random_pet.test.id}"
 
